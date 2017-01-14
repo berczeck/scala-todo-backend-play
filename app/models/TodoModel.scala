@@ -1,6 +1,6 @@
 package models
 
-import play.api.libs.json.{Json, Writes}
+import play.api.libs.json.{Json, Writes, Reads}
 
 /**
   * Created by HP on 13/01/2017.
@@ -18,4 +18,5 @@ case class TodoModel(id:Int, order:Int, title:String, url:String, completed:Bool
 
 object TodoModel {
   implicit val jsonWrites: Writes[TodoModel] = Json.writes[TodoModel]
+  implicit val jsonReads: Reads[TodoModel] = Json.reads[TodoModel]
 }

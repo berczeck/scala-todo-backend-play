@@ -1,6 +1,7 @@
 package controllers
 
 import models.{TodoModel, TodoRepository}
+import play.api.data.Form
 import play.api.libs.json.Json
 import play.api.mvc.{Action, Controller}
 
@@ -18,9 +19,14 @@ class Todo extends Controller {
     Ok(Json.toJson(repo.get(id)))
   }
 
-  def post() = ???
+  def post() = Action { request =>
+    //http://alvinalexander.com/scala/how-to-write-play-framework-http-post-request-json-web-service
+    val json = request.body.asJson.get
+    val model: TodoModel = json.as[TodoModel]
+    Ok(Json.toJson(repo.save(model)))
+  }
 
-  def patch() = ???
+  def patch(id:Int) = ???
 
   def deleteAll() = Action {
     repo.delete()

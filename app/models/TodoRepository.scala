@@ -1,10 +1,12 @@
 package models
 
+import scala.collection.mutable.ArrayBuffer
+
 /**
   * Created by HP on 13/01/2017.
   */
 class TodoRepository {
-  def getAll: Array[TodoModel] = TodoRepository.todoList
+  def getAll: Array[TodoModel] = TodoRepository.todoList.toArray
 
   def get(id: Int): Option[TodoModel] = {
     TodoRepository.todoList.find(_.id == id)
@@ -15,7 +17,7 @@ class TodoRepository {
       case 0 =>
         TodoRepository.maxId += 1
         val todo = model.copy(id = TodoRepository.maxId)
-        TodoRepository.todoList :+ todo
+        TodoRepository.todoList += todo
         todo
       case _ =>
         val index = TodoRepository.todoList.indexOf(model)
@@ -23,18 +25,24 @@ class TodoRepository {
           case x:Int if x >= 0 =>
             TodoRepository.todoList(index) = model
           case _ =>
-            TodoRepository.todoList :+ model
+            TodoRepository.todoList += model
         }
         model
     }
   }
 
-  def delete(): Unit = TodoRepository.todoList = Array[TodoModel]()
+  def delete(): Unit = TodoRepository.todoList.clear()
 
-  def delete(id: Int): Unit = TodoRepository.todoList.dropWhile(_.id == id)
+  def delete(id: Int): Unit = {
+    TodoRepository.todoList.filter(_.id == id).headOption match {
+      case Some(x) => TodoRepository.todoList.remove(TodoRepository.todoList.indexOf(x))
+      case None =>
+    }
+  }
 }
 
 object TodoRepository {
   private var maxId: Int = 0
-  private var todoList: Array[TodoModel] = Array[TodoModel]()
+  //http://alvinalexander.com/scala/scala-mutable-arrays-adding-elements-to-arrays
+  private var todoList: ArrayBuffer[TodoModel] = ArrayBuffer[TodoModel]()
 }
