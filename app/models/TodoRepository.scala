@@ -16,7 +16,8 @@ class TodoRepository {
     model.id match {
       case 0 =>
         TodoRepository.maxId += 1
-        val todo = model.copy(id = TodoRepository.maxId)
+        val id = TodoRepository.maxId
+        val todo = model.copy(id = id, url = s"${model.url}/${id}")
         TodoRepository.todoList += todo
         todo
       case _ =>
@@ -34,7 +35,7 @@ class TodoRepository {
   def delete(): Unit = TodoRepository.todoList.clear()
 
   def delete(id: Int): Unit = {
-    TodoRepository.todoList.filter(_.id == id).headOption match {
+    TodoRepository.todoList.find(_.id == id) match {
       case Some(x) => TodoRepository.todoList.remove(TodoRepository.todoList.indexOf(x))
       case None =>
     }

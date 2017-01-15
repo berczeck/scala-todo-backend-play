@@ -8,7 +8,7 @@ GET     /todo                       controllers.Todo.getAll
 GET     /todo/:id                   controllers.Todo.get(id:Int)
 DELETE  /todo                       controllers.Todo.deleteAll
 DELETE  /todo/:id                   controllers.Todo.delete(id:Int)
-#PATCH   /todo/:id                   controllers.Todo.patch(id:Int)
+PATCH   /todo/:id                   controllers.Todo.patch(id:Int)
 POST    /todo                       controllers.Todo.post
 
 # Map static resources from the /public folder to the /assets URL path

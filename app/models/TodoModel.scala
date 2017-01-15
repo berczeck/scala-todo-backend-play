@@ -19,4 +19,14 @@ case class TodoModel(id:Int, order:Int, title:String, url:String, completed:Bool
 object TodoModel {
   implicit val jsonWrites: Writes[TodoModel] = Json.writes[TodoModel]
   implicit val jsonReads: Reads[TodoModel] = Json.reads[TodoModel]
+
+  implicit val todoWrites = new Writes[TodoModel] {
+    def writes(model: TodoModel) = Json.obj(
+      "id" -> model.id,
+      "url" -> model.url,
+      "order" -> model.order,
+      "title" -> model.title,
+      "completed" -> model.completed
+    )
+  }
 }

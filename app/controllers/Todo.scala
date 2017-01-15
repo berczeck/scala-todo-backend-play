@@ -1,9 +1,10 @@
 package controllers
 
-import models.{TodoModel, TodoRepository}
-import play.api.data.Form
+import akka.util.ByteString
+import models.{ TodoModel, TodoRepository}
+import play.api.http.HttpEntity
 import play.api.libs.json.Json
-import play.api.mvc.{Action, Controller}
+import play.api.mvc._
 
 /**
   * Created by HP on 13/01/2017.
@@ -22,11 +23,23 @@ class Todo extends Controller {
   def post() = Action { request =>
     //http://alvinalexander.com/scala/how-to-write-play-framework-http-post-request-json-web-service
     val json = request.body.asJson.get
-    val model: TodoModel = json.as[TodoModel]
-    Ok(Json.toJson(repo.save(model)))
+    val todo: TodoModel = json.as[TodoModel].copy(url = s"${request.path}")
+    val model: TodoModel = repo.save(todo)
+    Result(
+      header = ResponseHeader(200, Map("location" -> model.url)),
+      body = HttpEntity.Strict(ByteString(Json.toJson(model).toString()), Some("application/json"))
+    )
   }
 
-  def patch(id:Int) = ???
+  def patch(id:Int) = Action { request =>
+    val json = request.body.asJson.get
+    val todo: TodoModel = json.as[TodoModel].copy(id = id)
+    val model: TodoModel = repo.save(todo)
+    Result(
+      header = ResponseHeader(200, Map("location" -> model.url)),
+      body = HttpEntity.Strict(ByteString("updated!"), Some("text/plain"))
+    )
+  }
 
   def deleteAll() = Action {
     repo.delete()
