@@ -12,24 +12,22 @@ class TodoRepository {
     TodoRepository.todoList.find(_.id == id)
   }
 
-  def save(model: TodoModel): TodoModel = {
-    model.id match {
-      case 0 =>
-        TodoRepository.maxId += 1
-        val id = TodoRepository.maxId
-        val todo = model.copy(id = id, url = s"${model.url}/${id}")
-        TodoRepository.todoList += todo
-        todo
-      case _ =>
-        val index = TodoRepository.todoList.indexOf(model)
-        index match {
-          case x:Int if x >= 0 =>
-            TodoRepository.todoList(index) = model
-          case _ =>
-            TodoRepository.todoList += model
-        }
-        model
-    }
+  def save(model: TodoModel): TodoModel = model.id match {
+    case 0 =>
+      TodoRepository.maxId += 1
+      val id = TodoRepository.maxId
+      val todo = model.copy(id = id, url = s"${model.url}/$id")
+      TodoRepository.todoList += todo
+      todo
+    case _ =>
+      val index = TodoRepository.todoList.indexOf(model)
+      index match {
+        case x:Int if x >= 0 =>
+          TodoRepository.todoList(index) = model
+        case _ =>
+          TodoRepository.todoList += model
+      }
+      model
   }
 
   def delete(): Unit = TodoRepository.todoList.clear()
